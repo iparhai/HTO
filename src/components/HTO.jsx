@@ -16,8 +16,9 @@ import cartL_T from '../assets/cartL_T.png'
 import cartL_O from '../assets/cartL_O.png'
 import learnHTO from './HTOLearn'
 import "./HTO.css"
+import arrowR from '../assets/arrow.gif'
+import arrowL from '../assets/arrowL.gif'
 import { getLearn } from './Quiz';
-let interactiveCLick = 0
 const HTO = (props) => {
     const [cartLeft, setCartLeft] = React.useState(window.innerWidth / 2 - window.innerWidth / 6)
     const [cartTop, setCartTop] = React.useState(0)
@@ -28,6 +29,7 @@ const HTO = (props) => {
     const [carMaxWidth, setCarMaxWidth] = React.useState(500)
     const [usedClick, setUsedClicks] = React.useState(0)
     const [clickCSS, setClickCSS] = React.useState(false)
+    const [arrow, setArrow] = React.useState(arrowR)
     var cartStyle = {
         move: {
             position: "absolute",
@@ -36,7 +38,7 @@ const HTO = (props) => {
             marginTop: "62vh",
             width: "100%",
             maxWidth: carMaxWidth + "px",
-            "pointer-events" : getLearn() ? "none" : "unset"
+            "pointer-events": getLearn() ? "none" : "unset"
         },
         click: {
             position: "absolute",
@@ -66,6 +68,7 @@ const HTO = (props) => {
     useEffect(() => {
         if (step >= 0 && usedClick == 0) {
             setImage(cartR_H)
+            setArrow(arrowR)
         }
         else if (step >= 0 && usedClick == 1) {
             setImage(cartR_T)
@@ -77,6 +80,7 @@ const HTO = (props) => {
         }
         else if (step < 0 && usedClick == 0) {
             setImage(cartL_O)
+            setArrow(arrowL)
 
         }
         else if (step < 0 && usedClick == 1) {
@@ -130,11 +134,31 @@ const HTO = (props) => {
                     }
                     setCartLeft(cartLeft + step)
                 }} />
+                <img alrt="arror" className="Cart" src={arrow} style={{
+                    position: "absolute",
+                    left: cartLeft + carMaxWidth / 2 + "px",
+                    top: cartTop + "px",
+                    marginTop: "59vh",
+                    width: "100%",
+                    maxWidth: carMaxWidth / 8 + "px",
+                }} onClick={() => {
+
+                    console.log(usedClick)
+                    if (usedClick >= 1) {
+
+                        setStep(step * -1)
+                        setUsedClicks(0)
+                    }
+                    else {
+                        setUsedClicks(usedClick + 1)
+                    }
+                    setCartLeft(cartLeft + step)
+                }} />
             </div>
             {!props.learn &&
-                <button onClick={() => { props.onClick() }}>
-                    ok
-                </button>
+                <div className="submitBorder" style={{ position: "absolute", top: window.innerHeight / 1.9, left: window.innerWidth / 1.35, padding: "0.5vw" }}>
+                    <i className="fa fa-paper-plane" style={{ fontSize: carMaxWidth / 10 }} onClick={() => { props.onClick() }} />
+                </div>
             }
         </div>
     );
