@@ -5,7 +5,8 @@ import {
   stateGame,
   reStartGame,
   startGame,
-  earnLife
+  earnLife,
+
 } from "./actions/index";
 
 export const mapStateToProps = state => {
@@ -29,5 +30,6 @@ export const mapDispatchToProps = dispatch => {
     onReStartGame: () => dispatch(reStartGame()),
     onStartGame: () => dispatch(startGame()),
     onEarnLife: () => dispatch(earnLife()),
+   
   };
 };

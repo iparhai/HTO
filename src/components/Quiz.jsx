@@ -3,17 +3,8 @@ import AnswerModal from "./AnswerModal";
 import { MathHelper } from "../utils";
 import './Quiz.css'
 import sessionData from "../utils/sessionData.js"
+import $ from "min-jquery";
 
-import zero from "../assets/zero.png"
-import one from "../assets/one.png"
-import two from "../assets/two.png"
-import three from "../assets/three.png"
-import four from "../assets/four.png"
-import five from "../assets/five.png"
-import six from "../assets/six.png"
-import seven from "../assets/seven.png"
-import eight from "../assets/eight.png"
-import nine from "../assets/nine.png"
 // import NumberLineMove from './NumberLineMove.jsx'
 
 
@@ -21,7 +12,11 @@ import nine from "../assets/nine.png"
 import "animate.css"
 import Alphabets from "./Alphabets";
 import HTO from "./HTO";
-import { number } from "prop-types";
+import { func, number } from "prop-types";
+
+let learn = true
+let exampleCount = 0
+
 class Quiz extends React.Component {
   _isMounted = false;
   _secondsIntervalRef;
@@ -41,8 +36,9 @@ class Quiz extends React.Component {
     possibleAnswers: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"],
     answer: "",
     correctAnswer: "",
-    images: [zero, one, two, three, four, five, six, seven, eight, nine],
-    totalProblems: 1
+    images: [],
+    totalProblems: 1,
+    quizMounted: false
   };
 
   earnLife = () => {
@@ -52,6 +48,27 @@ class Quiz extends React.Component {
       streaks: 0
     });
   };
+  getLearnProblem = () => {
+    const newNumber = "718"
+    // this.getImage(newNumber);
+    const newCorrectAnswer = newNumber.charAt(exampleCount)
+    this._isMounted &&
+      this.setState({
+        number: newNumber,
+        correctAnswer: newCorrectAnswer
+      });
+  }
+  nextLearnProblem = () => {
+    setTimeout(() => {
+      this.getLearnProblem()
+      this._isMounted &&
+        this.setState({
+          modalShowing: false,
+          answer: 0,
+        })
+      // if (this.props.lifes > 0) (this.answerInput && this.answerInput.focus());
+    }, 2500);
+  }
 
   correctAnswer = () => {
     if (this.state.streaks > 2) {
@@ -59,21 +76,47 @@ class Quiz extends React.Component {
     } else {
       this.showModal("success");
     }
-
-    this._isMounted && this.props.onCorretAnswer();
-    this.setState(state => {
-      return {
-        streaks: state.streaks + 1
-      };
-    });
-
-    this.nextProblem();
+    if (exampleCount < 2) {
+      exampleCount += 1
+      this.nextLearnProblem()
+    }
+    else {
+      learn = false
+      this._isMounted && this.props.onCorretAnswer();
+      this.setState(state => {
+        return {
+          streaks: state.streaks + 1
+        };
+      });
+      this.nextProblem();
+    }
   };
 
   componentDidMount() {
     this._isMounted = true;
-    this.getProblem();
+    learn ? this.getLearnProblem() : this.getProblem();
+    this.setState({ quizMounted: true })
+    console.log(this.props)
+    // if (learn == true) {
+    //   var event = $(document).onClick(function (e) {
+    //     e.stopPropagation();
+    //     e.preventDefault();
+    //     e.stopImmediatePropagation();
+    //     return false;
+    //   });
 
+    //   // disable right click
+    //   $(document).bind('contextmenu', function (e) {
+    //     e.stopPropagation();
+    //     e.preventDefault();
+    //     e.stopImmediatePropagation();
+    //     return false;
+    //   });
+    // }
+    // else {
+    //   $(document).unbind('click');
+    //   $(document).unbind('contextmenu');
+    // }
     // this.populateHover();
 
     // this.answerInput.focus();
@@ -112,8 +155,12 @@ class Quiz extends React.Component {
         this.setState({
           modalShowing: false,
           answer: 0,
+        })
+      if (learn == false) {
+        this.setState({
           totalProblems: this.state.totalProblems + 1
-        });
+        })
+      }
       if (this.props.lifes > 0) (this.answerInput && this.answerInput.focus());
     }, 2500);
   };
@@ -199,18 +246,14 @@ class Quiz extends React.Component {
             this.state.modal
           ) : (
             <div style={{ marginTop: "10vh" }}>
-
-
-              <h1 style={{ fontSize: "1.5em" }}> What is the Place Value Of
-                <span>
-                  <h1 style={{ fontSize: "1.5em", color: "red" }}>
-                    {this.state.correctAnswer}
-                  </h1>
-                </span> in {this.state.number}</h1>
+              <h1 style={{ fontSize: "1.5em", display: "flex" }}> Place Value Of &nbsp;<h1 style={{ marginTop: "-13px", color: "red" }}>
+                {this.state.correctAnswer} &nbsp;
+              </h1>
+                in {this.state.number} ?</h1>
 
               {/* <Alphabets setAnswer={(answer) => { this.setState({ answer: answer }) }} onClick={this.evaluateProblem} /> */}
 
-              <HTO setAnswer={(answer) => { this.setState({ answer: this.state.number.charAt(answer) }) }} onClick={this.evaluateProblem} />
+              {this.state.quizMounted && <HTO setAnswer={(index) => { this.setState({ answer: this.state.number.charAt(index) }) }} correctAnswer={this.state.correctAnswer} number={this.state.number} onClick={this.evaluateProblem} callCorrectAnswer={this.correctAnswer} learn={learn} />}
               {/* <input
                 className="App-input"
                 type="text"
@@ -238,5 +281,8 @@ class Quiz extends React.Component {
     );
   }
 }
-
+function getLearn() {
+  return learn
+}
+export { getLearn };
 export default Quiz;

@@ -18,6 +18,7 @@ import {
   Route,
   Link
 } from "react-router-dom";
+import { getLearn } from './components/Quiz';
 class App extends Component {
   state = {
     img: on,
@@ -38,6 +39,7 @@ class App extends Component {
   }
   componentDidMount() {
     this.state.sound.play()
+   
   }
   handleSoundClick = () => {
     if (!this.state.sound.paused) {
@@ -61,7 +63,7 @@ class App extends Component {
           <div >
             <img alt="mute" src={this.state.img} style={{ position: "absolute", top: "20px", left: "20px", maxWidth: "40px", width: "100%", zIndex: 4 }} onClick={this.handleSoundClick} />
           </div>
-          
+
           {
             !this.props.isStarted ? (
               <Start startPressed={this.gameStart} />

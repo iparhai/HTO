@@ -16,7 +16,7 @@ const initialState = {
   seconds: 300,
   level: 1,
   isFinished: false,
-  isStarted: false
+  isStarted: false,
 };
 
 export const answerQuiz = (state = initialState, action = {}) => {
@@ -24,7 +24,7 @@ export const answerQuiz = (state = initialState, action = {}) => {
     case GAIN_POINTS:
       const newPonts = state.points + action.payload;
       return Object.assign({}, state, {
-        points: newPonts
+        points: newPonts,
       });
     case SET_TIME:
       return Object.assign({}, state, {
@@ -34,17 +34,20 @@ export const answerQuiz = (state = initialState, action = {}) => {
       const newCorrectState = {
         points: state.points + action.payload.points,
         level: state.level + action.payload.level,
+        learn : false
       };
       return Object.assign({}, state, newCorrectState);
     case REMOVE_LIVE:
       const newLive = state.lifes - action.payload.lives;
       return Object.assign({}, state, {
         level : state.level - action.payload.level,
-        lifes: newLive
+        lifes: newLive,
+        learn : false
       });
     case FINISH_GAME:
       return Object.assign({}, state, {
-        isFinished: action.payload
+        isFinished: action.payload,
+        learn : false
       });
     case RESTART_GAME:
       return Object.assign({}, state, {
@@ -52,15 +55,18 @@ export const answerQuiz = (state = initialState, action = {}) => {
         lifes: 10,
         seconds: 300,
         level: 1,
-        isFinished: false
+        isFinished: false,
+        learn : false
       });
     case START_GAME:
       return Object.assign({}, state, {
-        isStarted: true
+        isStarted: true,
+        learn : false
       });
     case EARN_LIFE:
       return Object.assign({}, state, {
-        lifes: state.lifes + 1
+        lifes: state.lifes + 1,
+        learn : false
       });
     case REBOOT_GAME:
       return Object.assign({}, state, {
@@ -69,7 +75,8 @@ export const answerQuiz = (state = initialState, action = {}) => {
         seconds: 300,
         level: 1,
         isFinished: false,
-        isStarted: false
+        isStarted: false,
+        learn : false
       });
     default:
       return state;

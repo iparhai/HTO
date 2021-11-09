@@ -1,3 +1,7 @@
 .Cart {
     transition-duration: 0.7s;
 }
+
+.Cart:active {
+    width : "10%";
+}

@@ -14,16 +14,20 @@ import cartR_O from '../assets/cartR_O.png'
 import cartL_H from '../assets/cartL_H.png'
 import cartL_T from '../assets/cartL_T.png'
 import cartL_O from '../assets/cartL_O.png'
+import learnHTO from './HTOLearn'
 import "./HTO.css"
-
+import { getLearn } from './Quiz';
+let interactiveCLick = 0
 const HTO = (props) => {
     const [cartLeft, setCartLeft] = React.useState(window.innerWidth / 2 - window.innerWidth / 6)
     const [cartTop, setCartTop] = React.useState(0)
     const [step, setStep] = React.useState(200)
     const [image, setImage] = React.useState(cartR_H)
+    const imageRef = React.useRef()
     const [hto] = React.useState("H")
+    const [carMaxWidth, setCarMaxWidth] = React.useState(500)
     const [usedClick, setUsedClicks] = React.useState(0)
-
+    const [clickCSS, setClickCSS] = React.useState(false)
     var cartStyle = {
         move: {
             position: "absolute",
@@ -31,7 +35,17 @@ const HTO = (props) => {
             top: cartTop + "px",
             marginTop: "62vh",
             width: "100%",
-            maxWidth: "500px",
+            maxWidth: carMaxWidth + "px",
+            "pointer-events" : getLearn() ? "none" : "unset"
+        },
+        click: {
+            position: "absolute",
+            left: cartLeft + "px",
+            top: cartTop + "px",
+            marginTop: "62vh",
+            width: "100%",
+            maxWidth: carMaxWidth + "px",
+
         }
     }
     useEffect(() => {
@@ -50,7 +64,6 @@ const HTO = (props) => {
         setCartLeft(cartLeft)
     }, [step])
     useEffect(() => {
-
         if (step >= 0 && usedClick == 0) {
             setImage(cartR_H)
         }
@@ -75,31 +88,57 @@ const HTO = (props) => {
 
         }
     }, [usedClick])
+    useEffect(() => {
+        if (props.learn) {
+            setTimeout(() => {
+                learnHTO(imageRef, "", props.correctAnswer, props.number, () => props.callCorrectAnswer(), 0)
+
+            }, 2000)
+
+        }
+        checkResize()
+
+        window.addEventListener("resize", checkResize);
+        return () => {
+            window.removeEventListener("resize", checkResize)
+        }
+    }, [])
+    const checkResize = () => {
+        setCartLeft(window.innerWidth / 2 - window.innerWidth / 6)
+        setCarMaxWidth(window.innerWidth / 5)
+        setCartLeft((window.innerWidth / 2 - window.innerWidth / 5) + (step * usedClick))
+        setStep(window.innerWidth / 10)
+    }
+    const toggleClass = () => {
+        setClickCSS(!clickCSS)
+    }
 
     return (
         <div>
+            {props.learn && console.log("on learning mode")}
             <div >
-                <img alt="cart" src={image} className="Cart " style={cartStyle.move} onClick={() => {
+                <img alt="cart" src={image} className="Cart" style={cartStyle.move} ref={imageRef} onClick={() => {
 
-                    if (usedClick > 1) {
+                    console.log(usedClick)
+                    if (usedClick >= 1) {
+
                         setStep(step * -1)
                         setUsedClicks(0)
                     }
                     else {
                         setUsedClicks(usedClick + 1)
-                        setCartLeft(cartLeft + step)
                     }
-
+                    setCartLeft(cartLeft + step)
                 }} />
             </div>
-            <button onClick={() => { props.onClick() }}>
-                ok
-            </button>
-
+            {!props.learn &&
+                <button onClick={() => { props.onClick() }}>
+                    ok
+                </button>
+            }
         </div>
     );
 };
-
 export default HTO;
 
 // <div className="noselect parentDiv" >
