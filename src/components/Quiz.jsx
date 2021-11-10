@@ -14,7 +14,9 @@ import Alphabets from "./Alphabets";
 import HTO from "./HTO";
 import { func, number } from "prop-types";
 
-let learn = true
+const queryParams = new URLSearchParams(window.location.search);
+
+let learn =  queryParams.get('learn') ? queryParams.get('learn').toLowerCase().includes("true") ? true : false : true;
 let exampleCount = 0
 
 class Quiz extends React.Component {

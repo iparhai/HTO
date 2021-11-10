@@ -141,6 +141,7 @@ const HTO = (props) => {
                     marginTop: "59vh",
                     width: "100%",
                     maxWidth: carMaxWidth / 8 + "px",
+                    "pointer-events": getLearn() ? "none" : "unset"
                 }} onClick={() => {
 
                     console.log(usedClick)
@@ -156,8 +157,8 @@ const HTO = (props) => {
                 }} />
             </div>
             {!props.learn &&
-                <div className="submitBorder" style={{ position: "absolute", top: window.innerHeight / 1.9, left: window.innerWidth / 1.35, padding: "0.5vw" }}>
-                    <i className="fa fa-paper-plane" style={{ fontSize: carMaxWidth / 10 }} onClick={() => { props.onClick() }} />
+                <div className="submitBorder" style={{ position: "absolute", backgroundColor: "black", top: window.innerHeight / 1.9, left: window.innerWidth / 1.35, padding: "1vw" }} onClick={() => { props.onClick() }} >
+                    <i className="fa fa-paper-plane" style={{ fontSize: carMaxWidth / 10 }} />
                 </div>
             }
         </div>
