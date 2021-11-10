@@ -157,7 +157,7 @@ const HTO = (props) => {
                 }} />
             </div>
             {!props.learn &&
-                <button class="glow-on-hover" type="button" style={{ fontSize: carMaxWidth / 20, position: "absolute", top: window.innerHeight / 1.9, left: window.innerWidth / 1.35 }} onClick={() => { props.onClick() }} > <i className="fa fa-paper-plane fa-3x"/></button>
+                <button class="glow-on-hover" type="button" style={{ fontSize: carMaxWidth / 20, position: "absolute", top: window.innerHeight / 3, left: window.innerWidth / 2 }} onClick={() => { props.onClick() }} > <i className="fa fa-paper-plane fa-3x"/></button>
             }
         </div>
     );
